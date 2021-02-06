@@ -4,10 +4,7 @@ import bibtexparser
 from bibtexparser.bparser import BibTexParser
 import xlsxwriter
 
-TESTE_IEEE = "((\"Machine learning\" OR \"Deep learning\" OR \"Deep belief networks\" OR \"Convolutional neural networks\" OR \"Recurrent neural networks\" OR \"Generative adversarial networks\" OR \"perceptron networks\") AND  (\"Healthcare\" OR  \"mHealth\" OR  \"m-Health\" OR  \"e-Health\" OR \"eHealth\" OR \"patient monitoring\"  OR \"Medicine\" OR \"Medical\" OR \"Telemedicine\" OR \"Wearable Devices\") AND (\"Edge computing\" OR \"Fog computing\" OR \"Osmotic computing\"  OR \"MOBILE EDGE  COMPUTING\" OR \"CLOUDLET COMPUTING\"))"
-LENGTH_ACM  = 4
-LENGTH_IEEE  = 2
-LENGTH_SCOPUS  = 1
+
 FORBIDDEN_WORDS_TITLE = ["survey", "review"]
 DISNABLE_TYPES = ["Book Chapter", "Conference Review", "Review", "inbook"]
 # document_type Book Chapter - Conference Review  - Review - inproceedings
