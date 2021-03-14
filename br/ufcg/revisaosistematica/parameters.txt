@@ -1,9 +1,3 @@
-# RSLMaker
-
-Exemplo de execucao: 
-python.exe main.py parameters.txt
-
-Exemplo de arquivos com patrametros
 arquivos = "pubmed.bib"
 saida = "../demo.xlsx"
 titulos_proibidos = "survey", "review"
