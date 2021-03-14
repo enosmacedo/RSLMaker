@@ -1,4 +1,4 @@
-arquivos = "pubmed.bib"
+arquivos = "pubmed.bib", "outros_arquivos.bib", "outrs_arquivos.bib"
 saida = "../demo.xlsx"
 titulos_proibidos = "survey", "review"
 tipos_proibidos = "Book Chapter", "Conference Review", "Review", "inbook"
