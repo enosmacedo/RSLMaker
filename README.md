@@ -7,7 +7,10 @@ O programa ler arquivos .bib e exporta para um arquivo de excel com analises pre
 Exemplo de execucao: 
 python.exe main.py parameters.txt
 
-Exemplo de arquivos com patrametros
+
+Exemplo de arquivos com patrametros:
+
+
 arquivos = "pubmed.bib"
 saida = "../demo.xlsx"
 titulos_proibidos = "survey", "review"
