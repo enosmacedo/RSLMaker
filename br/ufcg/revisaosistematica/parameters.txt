@@ -1,5 +1,5 @@
-arquivos = "pubmed.bib"
-saida = "../demo.xlsx"
+arquivos = "preprint.bib"
+saida = "demo.xlsx"
 titulos_proibidos = "survey", "review"
 tipos_proibidos = "Book Chapter", "Conference Review", "Review", "inbook"
 numero_minimo_paginas = -1

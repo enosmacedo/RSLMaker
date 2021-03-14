@@ -37,6 +37,7 @@ def search(a1, msg, qnt_arquivos):
     qnt_reject_types = 0;
     qnt_reject_duplicate = 0;
     qnt_reject_num_pages = 0;
+    qnt_reject_library = 0;
     qnt_ok = 0;
     qnt_reject = 0;
     qnt_total = 0;
@@ -58,27 +59,35 @@ def search(a1, msg, qnt_arquivos):
         qnt_total = qnt_total + 1
         can_add = True;
         for disable_word in forbidden_words_title:
-            if disable_word.lower() in artigo["title"].lower():
-                qnt_reject_title = qnt_reject_title + 1
-                can_add = False;
-                cause_exclusion = "Por titulo"
-                break
-
+            try:
+                if disable_word.lower() in artigo["title"].lower():
+                    qnt_reject_title = qnt_reject_title + 1
+                    can_add = False;
+                    cause_exclusion = "Por titulo"
+                    break
+            except:
+                pass
         if can_add:
             for disable_type  in disable_types:
-                if (disable_type.lower() in artigo["ENTRYTYPE"].lower() ):
-                    can_add = False;
-                    qnt_reject_types = qnt_reject_types + 1
-                    cause_exclusion = "Por entrytype"
-                    break
-                    
+                try:
+                    if (disable_type.lower() in artigo["ENTRYTYPE"].lower() ):
+                        can_add = False;
+                        qnt_reject_types = qnt_reject_types + 1
+                        cause_exclusion = "Por entrytype"
+                        break
+                except:
+                    pass
         if can_add:
             for artigo_ja_adicionado in data_final:
-                if artigo["title"].casefold().replace(" ", "").lower() == artigo_ja_adicionado["title"].casefold().replace(" ", "").lower():
-                    can_add = False;
-                    qnt_reject_duplicate = qnt_reject_duplicate + 1
-                    cause_exclusion = "Por titulo - reptido"
-                    break;
+                try:
+                    if artigo["title"].casefold().replace(" ", "").lower() == artigo_ja_adicionado["title"].casefold().replace(" ", "").lower():
+                        can_add = False;
+                        qnt_reject_duplicate = qnt_reject_duplicate + 1
+                        cause_exclusion = "Por titulo - reptido"
+                        break;
+                except:
+                    pass
+
         if can_add:
             for artigo_ja_adicionado in data_final:
                 try:
@@ -88,7 +97,7 @@ def search(a1, msg, qnt_arquivos):
                         cause_exclusion = "Por tipo documento"
                         break
                 except:
-                    continue
+                    pass
 
         if can_add:
             try:
@@ -105,7 +114,7 @@ def search(a1, msg, qnt_arquivos):
                         qnt_reject_num_pages = qnt_reject_num_pages + 1
                         cause_exclusion = "Por numero paginas minimo"
                 except:
-                    continue
+                    pass
 
         if can_add:
             try:
@@ -122,7 +131,7 @@ def search(a1, msg, qnt_arquivos):
                         qnt_reject_num_pages = qnt_reject_num_pages + 1
                         cause_exclusion = "Por numero paginas maximo"
                 except:
-                    continue
+                    pass
 
         aux = {"title": artigo["title"]}
         try:
