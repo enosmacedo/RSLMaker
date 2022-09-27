@@ -12,7 +12,7 @@ Por fim, detacamos que: nessa primeira versão do RSLMaker, os parâmetros estã
 python.exe main.py parameters.txt
 
 ### Exemplo de arquivos com patrametros:
-arquivos = "pubmed.bib", " "outroarquivo.bib""
+arquivos = "pubmed.bib", "outroarquivo.bib"
 
 saida = "../demo.xlsx"
 
