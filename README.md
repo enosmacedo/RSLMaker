@@ -5,7 +5,7 @@ Esse programa ler arquivos .bib e exporta para um arquivo de excel com analises 
 
 O exel exportado pode ser formato pelo usuário com o intutito de compartilha-lo entre os outros autores da revisão sistemática. Essa formatação fica a critério do usuário e a estrutura padrão dada como resposta do programa é uma estrutura básica e simples.
 
-Por fim, detacamos que: nessa primeira versão do RSLMaker, os parâmetros estão dispostos como constantes no código fonte. Portanto, é preciso alterá-los antes de executar o mesmo.
+Por fim, detacamos que: nessa primeira versão do RSLMaker, os parâmetros estão dispostos como constantes no código fonte. Portanto, é preciso alterá-los antes de executar o mesmo. Essas constantes estão descritas no arquivo parameters.txt.
 
 
 ### Exemplo de execucao: 
