@@ -1,13 +1,14 @@
 ### RSLMaker
 Programa para axuliar uma revisão sistemática. 
 
-Esse programa ler arquivos .bib e exporta para um arquivo de excel com analises preliminares (abaixo). Esses arquivos .bib são gerados a partir de resultados de buscas de strings em bases de dados de pesquisa científica (como IEEE Xplorer, ACM Digital e Elsevier). Durante a leitura desses arquivos, o RSLMaker executa algumas filtragens conforme é solicitado a ele para impedir que esses arquivos entrem no resultado final da planilha (arquivo excel). Por exemplo, é possível solicitar que artigos duplicados, ou seja, que apareçam em mais de um .bib, sejam vetados de aparecer mais de uma vez no excel.
+Entrada: Arquivos .bib
+Saída: Arquivo .xls
 
-O excel exportado pode ser formato pelo usuário com o intutito de compartilha-lo entre os outros autores da revisão sistemática. Essa formatação fica a critério do usuário e a estrutura padrão dada como resposta do programa é uma estrutura básica e simples.
+Esse programa ler arquivos .bib  e exporta para um arquivo de excel com uma pré-formatação e pré-filtragem (que será explicada nesse documento). Esses arquivos .bib são gerados através de buscas em bases de dados de pesquisa científica (como IEEE Xplorer, ACM Digital e Elsevier). Durante a leitura desses arquivos, o RSLMaker executa algumas filtragens conforme é solicitado. Por exemplo, é possível solicitar que artigos duplicados, ou seja, que apareçam em mais de um .bib, sejam vetados de aparecer mais de uma vez no excel.
 
-É importante destacar que as plataformas de base de dados citadas (IEEE Xplorer, ACM Digital e Elsevier) são capazes de gerar os arquivos .bib que serão usados como entrada do programa.
+O excel exportado pelo programa deve ser posteriormente formatado pelo usuário com o intutito de compartilha-lo entre os outros autores da revisão sistemática. Essa formatação fica a critério do usuário e a estrutura padrão dada como resposta do programa é uma estrutura básica e simples.
 
-Por fim, detacamos que: nessa primeira versão do RSLMaker, os parâmetros estão dispostos como constantes no código fonte. Portanto, é preciso alterá-los antes de executar o mesmo. Essas constantes estão descritas no arquivo parameters.txt.
+Por fim, detacamos que, nessa primeira versão do RSLMaker, os parâmetros estão dispostos como constantes no código fonte. Portanto, é preciso alterá-los antes de executar o mesmo. Essas constantes estão descritas no arquivo parameters.txt.
 
 
 ### Detalhes técnicos: 
