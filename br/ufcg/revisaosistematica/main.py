@@ -3,14 +3,16 @@ import json
 import bibtexparser
 from bibtexparser.bparser import BibTexParser
 import xlsxwriter
+import os
 
-FILE_NAME_PARAMETER = "arquivos"
+DIR_INPUT_NAME_PARAMETER = "diretorio"
 OUTPUT_NAME_PARAMETER = "saida"
 FORBIDDEN_WORDS_TITLE_PARAMETER = "titulos_proibidos"
 DISABLE_TYPES_PARAMETER = "tipos_proibidos"
 NUM_MIN_PAGES_PARAMETER = "numero_minimo_paginas"
 NUM_MAX_PAGES_PARAMETER= "numero_maximo_paginas"
 PRINT_REPROVED_ARTICLES_PARAMETER = "imprimir_artigos_reprovados"
+ENABLE_DEBUG = "debug"
 
 forbidden_words_title = []
 disable_types = []
@@ -18,12 +20,13 @@ num_min_pages = -1
 num_max_pages = 10000
 print_reproved_articles = False
 output_file = ""
+enable_debug = False
 
-data_final = [];
-data_reject = [];
+data_final = []
+data_reject = []
+print_string_res = ""
 
-
-def search(a1, msg, qnt_arquivos):
+def search(data, msg, qnt_arquivos):
     global data_final
     global data_reject
     global forbidden_words_title
@@ -42,18 +45,6 @@ def search(a1, msg, qnt_arquivos):
     qnt_reject = 0;
     qnt_total = 0;
     cause_exclusion = ""
-
-    data = []
-    for i in range(0, qnt_arquivos):
-        bib_database = None
-        parser = BibTexParser(common_strings=True)
-        if i == 0:
-            with open(a1, encoding="utf8") as bibtex_file:
-                bib_database = bibtexparser.load(bibtex_file, parser=parser)
-        else:
-            with open(a1+"(" + str(i) + ")", encoding="utf8") as bibtex_file:
-                bib_database = bibtexparser.load(bibtex_file, parser=parser)
-        data = data + bib_database.entries
 
     for idx, artigo in enumerate(data):
         qnt_total = qnt_total + 1
@@ -207,16 +198,42 @@ def create_xlms(data):
     return
 
 
-def main():
+
+def find_files_bib(list_dirs):
+    file_list = []
+
+    for dir_name in list_dirs: 
+        files_list_aux = []
+        for aux_file in os.listdir(dir_name):
+            if ".bib" in aux_file:
+                new_file = dir_name + aux_file;
+                files_list_aux.append(new_file)
+        
+        file_list += files_list_aux
+    file_list.sort()
+    return file_list
+
+
+def get_data_by_files(file_list):
+    data = []
+    for file_full in file_list:
+        parser = BibTexParser(common_strings=True)
+        with open(file_full, encoding="utf8") as bibtex_file:
+            bib_database = bibtexparser.load(bibtex_file, parser=parser)
+        data = data + bib_database.entries
+    return data
+
+
+def read_parameters(fileParameters):
     global forbidden_words_title
     global disable_types
     global num_min_pages
     global num_max_pages
     global print_reproved_articles
     global output_file
+    global enable_debug
 
     try: 
-        fileParameters = sys.argv[1]
         fileObj = open(fileParameters)
     except: 
         mensagem_aviso = "Passe como parametro de execucao um arquivo (preferencialmente .txt) "
@@ -263,13 +280,36 @@ def main():
         output_file = params[OUTPUT_NAME_PARAMETER][0]
     except: 
         pass
-    
     try:
-        for  f in params[FILE_NAME_PARAMETER]: 
-            aux = f.split("/")[-1].split(".")[0];
-            search(f, aux, 1)
+        enable_debug = params[ENABLE_DEBUG][0]
+    except: 
+        pass
+    
+    return params
+
+
+    
+def main():
+    global forbidden_words_title
+    global disable_types
+    global num_min_pages
+    global num_max_pages
+    global print_reproved_articles
+    global output_file
+    global enable_debug
+
+    fileParameters = sys.argv[1]
+    params = read_parameters(fileParameters)
+           
+    try:
+        list_dir = params[DIR_INPUT_NAME_PARAMETER]
+        print(list_dir)
+        file_list = find_files_bib(list_dir)
+        print(file_list)       
+        data = get_data_by_files(file_list)
+        search(data, "teste", 11) 
     except:
-        print("Eh preciso adicionar os arquivos .bib")
+        print("Erro ao carregar arquivos .bib")
    
     print ("aprovados final (após todas as análises): " + str(len(data_final)))
     create_xlms(data_final)

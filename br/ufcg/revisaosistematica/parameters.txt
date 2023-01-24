@@ -1,12 +1,11 @@
-<<<<<<< HEAD
-arquivos = "preprint.bib"
-saida = "demo.xlsx"
-=======
-arquivos = "pubmed.bib", "outros_arquivos.bib", "outrs_arquivos.bib"
-saida = "../demo.xlsx"
->>>>>>> d4f49aa524ef2278463e5c8c0ab86fe3ca47adaa
+diretorio = "/home/daniel/Documentos/revisao/dados/"
+saida = "/home/daniel/Documentos/revisao/dados/demo.xlsx"
 titulos_proibidos = "survey", "review"
 tipos_proibidos = "Book Chapter", "Conference Review", "Review", "inbook"
 numero_minimo_paginas = -1
 numero_maximo_paginas = 100
 imprimir_artigos_reprovados = False
+debug = False
+
+
+
