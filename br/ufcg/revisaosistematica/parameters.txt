@@ -2,9 +2,9 @@ diretorio = "/home/daniel/Documentos/revisao/dados/"
 saida = "/home/daniel/Documentos/revisao/dados/demo.xlsx"
 titulos_proibidos = "survey", "review"
 tipos_proibidos = "Book Chapter", "Conference Review", "Review", "inbook"
-numero_minimo_paginas = -1
-numero_maximo_paginas = 100
-imprimir_artigos_reprovados = False
+numero_minimo_paginas = 4
+numero_maximo_paginas = 1000
+imprimir_artigos_reprovados = True
 debug = False
 
 

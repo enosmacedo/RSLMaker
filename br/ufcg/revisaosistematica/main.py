@@ -13,6 +13,7 @@ NUM_MIN_PAGES_PARAMETER = "numero_minimo_paginas"
 NUM_MAX_PAGES_PARAMETER= "numero_maximo_paginas"
 PRINT_REPROVED_ARTICLES_PARAMETER = "imprimir_artigos_reprovados"
 ENABLE_DEBUG = "debug"
+TOKEN_SEPARTOR_STRING_RES = "*"
 
 forbidden_words_title = []
 disable_types = []
@@ -26,6 +27,7 @@ data_final = []
 data_reject = []
 print_string_res = ""
 
+
 def search(data, msg, qnt_arquivos):
     global data_final
     global data_reject
@@ -35,6 +37,7 @@ def search(data, msg, qnt_arquivos):
     global num_max_pages
     global print_reproved_articles
     global output_file
+    global print_string_res
 
     qnt_reject_title = 0;
     qnt_reject_types = 0;
@@ -66,16 +69,6 @@ def search(data, msg, qnt_arquivos):
                         qnt_reject_types = qnt_reject_types + 1
                         cause_exclusion = "Por entrytype"
                         break
-                except:
-                    pass
-        if can_add:
-            for artigo_ja_adicionado in data_final:
-                try:
-                    if artigo["title"].casefold().replace(" ", "").lower() == artigo_ja_adicionado["title"].casefold().replace(" ", "").lower():
-                        can_add = False;
-                        qnt_reject_duplicate = qnt_reject_duplicate + 1
-                        cause_exclusion = "Por titulo - reptido"
-                        break;
                 except:
                     pass
 
@@ -124,6 +117,17 @@ def search(data, msg, qnt_arquivos):
                 except:
                     pass
 
+        if can_add:
+            for artigo_ja_adicionado in data_final:
+                try:
+                    if artigo["title"].casefold().replace(" ", "").lower() == artigo_ja_adicionado["title"].casefold().replace(" ", "").lower():
+                        can_add = False;
+                        qnt_reject_duplicate = qnt_reject_duplicate + 1
+                        cause_exclusion = "Por titulo - repetido"
+                        break;
+                except:
+                    pass
+                
         aux = {"title": artigo["title"]}
         try:
            aux["abstract"] = artigo["abstract"]
@@ -153,20 +157,47 @@ def search(data, msg, qnt_arquivos):
             if print_reproved_articles:
                 print(cause_exclusion + " - " + str(idx) + " - " +  msg + ": " + artigo["title"])
 
-    print("total "     + msg + " no total inicio (1): " + str(len(data)))
-    print("aprovados " + msg + " no total inicio (2): " + str(qnt_total))
-    print("aprovados " + msg + " no final: " + str(qnt_ok))
-    print("reprovados "+ msg + " total: " + str(qnt_reject))
-    print("reprovados "+ msg + " por titulo: " + str(qnt_reject_title))
-    print("reprovados "+ msg + " por tipo: " + str(qnt_reject_types))
-    print("reprovados "+ msg + " por duplicacao: " + str(qnt_reject_duplicate))
-    print("reprovados "+ msg + " por num pages: " + str(qnt_reject_num_pages))
+
+    aux = "total " + msg + " no total inicio (1): " + str(len(data))
+    print_string_res += aux + TOKEN_SEPARTOR_STRING_RES
+    print (aux)
+    
+    aux = "aprovados " + msg + " no total inicio (2): " + str(qnt_total)
+    print_string_res += aux + TOKEN_SEPARTOR_STRING_RES
+    print (aux)
+        
+    aux = "aprovados " + msg + " no final: " + str(qnt_ok)
+    print_string_res += aux + TOKEN_SEPARTOR_STRING_RES
+    print (aux)   
+    
+    aux = "reprovados "+ msg + " total: " + str(qnt_reject)
+    print_string_res += aux + TOKEN_SEPARTOR_STRING_RES
+    print (aux)
+
+    aux = "reprovados "+ msg + " por titulo: " + str(qnt_reject_title)
+    print_string_res += aux + TOKEN_SEPARTOR_STRING_RES
+    print (aux)
+
+    aux = "reprovados "+ msg + " por tipo: " + str(qnt_reject_types)
+    print_string_res += aux + TOKEN_SEPARTOR_STRING_RES
+    print (aux)
+    
+    aux = "reprovados "+ msg + " por duplicacao: " + str(qnt_reject_duplicate)
+    print_string_res += aux + TOKEN_SEPARTOR_STRING_RES
+    print (aux)
+    
+    aux = "reprovados "+ msg + " por num pages: " + str(qnt_reject_num_pages)
+    print_string_res += aux + TOKEN_SEPARTOR_STRING_RES
+    print (aux)    
     print("")
+
     return data
 
 
 def create_xlms(data):
     global output_file
+    global print_string_res
+
     # Create an new Excel file and add a worksheet.
     workbook = xlsxwriter.Workbook(output_file)
     worksheet = workbook.add_worksheet()
@@ -183,7 +214,7 @@ def create_xlms(data):
     worksheet.write('F1', 'plataforma', bold)
     worksheet.write('G1', 'bibtex', bold)
 
-    row_initial_aux = 2;
+    row_initial_aux = 2
     for a in data:
         worksheet.write('A' + str(row_initial_aux), a['title'])
         worksheet.write('B' + str(row_initial_aux), a['content_type'])
@@ -192,7 +223,16 @@ def create_xlms(data):
         worksheet.write('E' + str(row_initial_aux), a['keywords'])
         worksheet.write('F' + str(row_initial_aux), a['plataforma'])
         worksheet.write('G' + str(row_initial_aux), a['bibtex'])
-        row_initial_aux = row_initial_aux + 1;
+        row_initial_aux += 1
+
+
+    worksheet = workbook.add_worksheet()
+    row_initial_aux = 1
+    data = print_string_res.split(TOKEN_SEPARTOR_STRING_RES)
+    for a in data:
+        worksheet.write('A' + str(row_initial_aux), a)
+        row_initial_aux += 1
+
 
     workbook.close()
     return
@@ -281,7 +321,7 @@ def read_parameters(fileParameters):
     except: 
         pass
     try:
-        enable_debug = params[ENABLE_DEBUG][0]
+        enable_debug = bool(params[ENABLE_DEBUG][0])
     except: 
         pass
     
@@ -297,29 +337,42 @@ def main():
     global print_reproved_articles
     global output_file
     global enable_debug
+    global print_string_res
 
     fileParameters = sys.argv[1]
     params = read_parameters(fileParameters)
            
     try:
         list_dir = params[DIR_INPUT_NAME_PARAMETER]
-        print(list_dir)
         file_list = find_files_bib(list_dir)
-        print(file_list)       
         data = get_data_by_files(file_list)
+        if enable_debug:
+            print(list_dir)
+            print(file_list)       
         search(data, "teste", 11) 
     except:
         print("Erro ao carregar arquivos .bib")
    
+    print_string_res += "aprovados final (após todas as análises): " + str(len(data_final)) + TOKEN_SEPARTOR_STRING_RES
     print ("aprovados final (após todas as análises): " + str(len(data_final)))
-    create_xlms(data_final)
     
+    print_string_res += "reprovados final (após todas as análises): " + str(len(data_reject)) + TOKEN_SEPARTOR_STRING_RES
     print("reprovados final (após todas as análises): " + str(len(data_reject)))
-    if print_reproved_articles:
-        index = 0;
-        for a in data_reject:
-            index = index + 1;
-            print(index, " -->", a["title"])
+    
+    index = 0;
+    for a in data_reject:
+        index = index + 1;
+        aux = str(index) + " -->" + a["title"]
+        if print_reproved_articles:
+            print(aux)
+        print_string_res += aux + TOKEN_SEPARTOR_STRING_RES
+    
+    
+    if enable_debug:
+        print(print_string_res)
+        
+    create_xlms(data_final)
+
     return
 
 
