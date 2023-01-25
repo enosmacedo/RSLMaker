@@ -1,7 +1,7 @@
 ### RSLMaker
 Programa para axuliar uma revisão sistemática. 
 
-### Entrada: Um parameter .txt com diversos variáveis e, em especial, o diretorios de arquivos .bib
+### Entrada: Um aquivo .txt com diversos parâmetros e, em especial, o diretorios de arquivos .bib
 
 ### Saída: Arquivo .xls
 
