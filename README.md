@@ -2,6 +2,7 @@
 Programa para axuliar uma revisão sistemática. 
 
 ### Entrada: Um parameter .txt com diversos variáveis e, em especial, o diretorios de arquivos .bib
+
 ### Saída: Arquivo .xls
 
 Esse programa ler arquivos .bib  e exporta para um arquivo de excel com uma pré-formatação e pré-filtragem (que será explicada nesse documento). Esses arquivos .bib são gerados através de buscas em bases de dados de pesquisa científica (como IEEE Xplorer, ACM Digital e Elsevier). Durante a leitura desses arquivos, o RSLMaker executa algumas filtragens conforme é solicitado. Por exemplo, é possível solicitar que artigos duplicados, ou seja, que apareçam em mais de um .bib, sejam vetados de aparecer mais de uma vez no excel.
