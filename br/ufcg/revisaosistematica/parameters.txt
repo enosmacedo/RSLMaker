@@ -1,5 +1,5 @@
 diretorio = "/home/daniel/Documentos/revisao/dados/"
-saida = "/home/daniel/Documentos/revisao/dados/demo.xlsx"
+saida = "/home/daniel/Documentos/revisao/dados/resumo.xlsx"
 titulos_proibidos = "survey", "review"
 tipos_proibidos = "Book Chapter", "Conference Review", "Review", "inbook"
 numero_minimo_paginas = 4

@@ -1,5 +1,7 @@
 import sys
 import json
+from asyncore import file_wrapper
+
 import bibtexparser
 from bibtexparser.bparser import BibTexParser
 import xlsxwriter
@@ -14,6 +16,7 @@ NUM_MAX_PAGES_PARAMETER= "numero_maximo_paginas"
 PRINT_REPROVED_ARTICLES_PARAMETER = "imprimir_artigos_reprovados"
 ENABLE_DEBUG = "debug"
 TOKEN_SEPARTOR_STRING_RES = "*"
+TOKEN_SEPARTOR_STRING_RES_INNER = "$"
 
 forbidden_words_title = []
 disable_types = []
@@ -26,9 +29,19 @@ enable_debug = False
 data_final = []
 data_reject = []
 print_string_res = ""
+print_string_exclusion = ""
+
+qnt_reject_title = 0;
+qnt_reject_types = 0;
+qnt_reject_duplicate = 0;
+qnt_reject_num_pages = 0;
+qnt_reject_library = 0;
+qnt_ok = 0;
+qnt_reject = 0;
+qnt_total = 0;
 
 
-def search(data, msg, qnt_arquivos):
+def search(data, msg):
     global data_final
     global data_reject
     global forbidden_words_title
@@ -38,15 +51,16 @@ def search(data, msg, qnt_arquivos):
     global print_reproved_articles
     global output_file
     global print_string_res
+    global print_string_exclusion
 
-    qnt_reject_title = 0;
-    qnt_reject_types = 0;
-    qnt_reject_duplicate = 0;
-    qnt_reject_num_pages = 0;
-    qnt_reject_library = 0;
-    qnt_ok = 0;
-    qnt_reject = 0;
-    qnt_total = 0;
+    global qnt_reject_title
+    global qnt_reject_types
+    global qnt_reject_duplicate
+    global qnt_reject_num_pages
+    global qnt_reject_library
+    global qnt_ok
+    global qnt_reject
+    global qnt_total
     cause_exclusion = ""
 
     for idx, artigo in enumerate(data):
@@ -71,7 +85,6 @@ def search(data, msg, qnt_arquivos):
                         break
                 except:
                     pass
-
         if can_add:
             for artigo_ja_adicionado in data_final:
                 try:
@@ -154,8 +167,10 @@ def search(data, msg, qnt_arquivos):
         else:
             data_reject = data_reject + [aux]
             qnt_reject = qnt_reject + 1
+            aux_print = cause_exclusion + TOKEN_SEPARTOR_STRING_RES_INNER + str(idx) + TOKEN_SEPARTOR_STRING_RES_INNER +  msg + TOKEN_SEPARTOR_STRING_RES_INNER + artigo["title"]
+            print_string_exclusion += aux_print  + TOKEN_SEPARTOR_STRING_RES
             if print_reproved_articles:
-                print(cause_exclusion + " - " + str(idx) + " - " +  msg + ": " + artigo["title"])
+                print(aux_print)
 
 
     aux = "total " + msg + " no total inicio (1): " + str(len(data))
@@ -197,6 +212,7 @@ def search(data, msg, qnt_arquivos):
 def create_xlms(data):
     global output_file
     global print_string_res
+    global print_string_exclusion
 
     # Create an new Excel file and add a worksheet.
     workbook = xlsxwriter.Workbook(output_file)
@@ -233,6 +249,18 @@ def create_xlms(data):
         worksheet.write('A' + str(row_initial_aux), a)
         row_initial_aux += 1
 
+    worksheet = workbook.add_worksheet()
+    row_initial_aux = 1
+    data = print_string_exclusion.split(TOKEN_SEPARTOR_STRING_RES)
+    columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+    for string in data:
+        string_aux =  string.split(TOKEN_SEPARTOR_STRING_RES_INNER)
+        columns_index = 0
+        for substring in string_aux:
+            column_aux = columns[columns_index]
+            worksheet.write(column_aux + str(row_initial_aux), substring)
+            columns_index += 1
+        row_initial_aux += 1
 
     workbook.close()
     return
@@ -338,6 +366,7 @@ def main():
     global output_file
     global enable_debug
     global print_string_res
+    global print_string_exclusion
 
     fileParameters = sys.argv[1]
     params = read_parameters(fileParameters)
@@ -345,11 +374,13 @@ def main():
     try:
         list_dir = params[DIR_INPUT_NAME_PARAMETER]
         file_list = find_files_bib(list_dir)
-        data = get_data_by_files(file_list)
+        for file in file_list:
+            data = get_data_by_files([file])
+            search(data, file)
+
         if enable_debug:
             print(list_dir)
-            print(file_list)       
-        search(data, "teste", 11) 
+            print(file_list)
     except:
         print("Erro ao carregar arquivos .bib")
    
