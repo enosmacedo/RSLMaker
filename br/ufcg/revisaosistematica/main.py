@@ -63,6 +63,8 @@ def search(data, msg):
     global qnt_total
     cause_exclusion = ""
 
+
+
     for idx, artigo in enumerate(data):
         qnt_total = qnt_total + 1
         can_add = True;
@@ -78,20 +80,21 @@ def search(data, msg):
         if can_add:
             for disable_type  in disable_types:
                 try:
-                    if (disable_type.lower() in artigo["ENTRYTYPE"].lower() ):
+                    if disable_type.lower() in artigo["ENTRYTYPE"].lower():
                         can_add = False;
                         qnt_reject_types = qnt_reject_types + 1
-                        cause_exclusion = "Por entrytype"
+                        cause_exclusion = "Por entrytype ou document type"
                         break
                 except:
                     pass
+
         if can_add:
-            for artigo_ja_adicionado in data_final:
+            for disable_type in disable_types:
                 try:
-                    if (artigo["document_type"].casefold().replace(" ", "").lower() == artigo_ja_adicionado["document_type"].casefold().replace(" ", "").lower()):
+                    if disable_type.lower() in artigo["document_type"].lower():
                         can_add = False;
                         qnt_reject_types = qnt_reject_types + 1
-                        cause_exclusion = "Por tipo documento"
+                        cause_exclusion = "Por entrytype ou document type"
                         break
                 except:
                     pass
@@ -140,7 +143,7 @@ def search(data, msg):
                         break;
                 except:
                     pass
-                
+
         aux = {"title": artigo["title"]}
         try:
            aux["abstract"] = artigo["abstract"]
@@ -288,6 +291,7 @@ def get_data_by_files(file_list):
         parser = BibTexParser(common_strings=True)
         with open(file_full, encoding="utf8") as bibtex_file:
             bib_database = bibtexparser.load(bibtex_file, parser=parser)
+
         data = data + bib_database.entries
     return data
 
@@ -370,7 +374,7 @@ def main():
 
     fileParameters = sys.argv[1]
     params = read_parameters(fileParameters)
-           
+    #params = read_parameters("/home/daniel/Documentos/revisao/RSLMaker/br/ufcg/revisaosistematica/parameters.txt")
     try:
         list_dir = params[DIR_INPUT_NAME_PARAMETER]
         file_list = find_files_bib(list_dir)
