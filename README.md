@@ -37,3 +37,9 @@ imprimir_artigos_reprovados = False
 
 
 ### Video exemplo de uso:
+
+
+### Instalação:
+Para instalar, use o arquivo requeriments.txt
+Sugetão de comando?
+pip install -r requeriments.txt
